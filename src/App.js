@@ -1,6 +1,9 @@
 import { useEffect, useReducer } from "react";
 import Header from "./Header";
 import Main from "./main";
+import Error from "./Error";
+import StartScreen from "./StartScreen";
+import Loader from "./Loader";
 
 const initialState = {
   questions: [],
@@ -15,7 +18,7 @@ const reducer = function (state, action) {
       return { ...state, questions: action.payload, status: 'ready' }
     }
     case "error": {
-      return { ...state, questions: [], status: 'error' }
+      return { ...state, status: 'error' }
     }
 
     default: throw new Error("unknown action")
@@ -23,8 +26,9 @@ const reducer = function (state, action) {
 }
 
 function App() {
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const { questions, status } = state;
+  const [{ questions, status }, dispatch] = useReducer(reducer, initialState);
+
+  const numQuestions = questions.length;
 
   useEffect(function () {
 
@@ -40,8 +44,9 @@ function App() {
       <Header />
 
       <Main>
-        <p>1/15</p>
-        <p>Questions?</p>
+        {status === "loading" && <Loader />}
+        {status === "ready" && <StartScreen numQuestions={numQuestions} />}
+        {status === "error" && <Error />}
       </Main>
     </div>
   );
