@@ -10,7 +10,8 @@ const initialState = {
   questions: [],
 
   // loading, error, ready, active, finished
-  status: 'loading'
+  status: 'loading',
+  index: 0
 };
 
 const reducer = function (state, action) {
@@ -30,7 +31,7 @@ const reducer = function (state, action) {
 }
 
 function App() {
-  const [{ questions, status }, dispatch] = useReducer(reducer, initialState);
+  const [{ questions, status, index }, dispatch] = useReducer(reducer, initialState);
 
   const numQuestions = questions.length;
 
@@ -54,7 +55,7 @@ function App() {
           dispatch={dispatch}
         />}
         {status === "dataFailed" && <Error />}
-        {status === "active" && <Question />}
+        {status === "active" && <Question question={questions[index]} />}
       </Main>
     </div>
   );
