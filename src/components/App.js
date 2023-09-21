@@ -5,7 +5,7 @@ import Error from "./Error";
 import StartScreen from "./StartScreen";
 import Loader from "./Loader";
 import Question from "./Question";
-// import NextQuestion from "./NextQuestion";
+import NextQuestion from "./NextQuestion";
 
 const initialState = {
   questions: [],
@@ -82,7 +82,7 @@ function App() {
               dispatch={dispatch}
               answer={answer}
             />
-            {/* <NextQuestion dispatch={dispatch} answer={answer} /> */}
+            <NextQuestion dispatch={dispatch} answer={answer} />
           </>
 
         }
