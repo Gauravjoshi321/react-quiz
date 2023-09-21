@@ -1,4 +1,5 @@
 import { useEffect, useReducer } from "react";
+
 import Header from "./Header";
 import Main from "./main";
 import Error from "./Error";
@@ -11,6 +12,8 @@ import FinishScreen from "./FinishScreen";
 import Footer from "./Footer";
 import Timer from "./Timer";
 
+const SEC_PER_QUESTION = 1;
+
 const initialState = {
   questions: [],
 
@@ -20,13 +23,18 @@ const initialState = {
   answer: null,
   points: 0,
   highScore: 0,
-  secondsRemaining: 10
+  secondsRemaining: null
 };
 
 const reducer = function (state, action) {
   switch (action.type) {
     case "dataRecieved": {
-      return { ...state, questions: action.payload, status: 'ready' }
+      return {
+        ...state,
+        questions: action.payload,
+        status: 'ready',
+        secondsRemaining: state.questions.length * SEC_PER_QUESTION
+      }
     }
     case "dataFailed": {
       return { ...state, status: 'error' }
@@ -68,6 +76,13 @@ const reducer = function (state, action) {
         restart: true
       }
     }
+    case "tick": {
+      return {
+        ...state,
+        secondsRemaining: state.secondsRemaining - 1,
+        status: state.secondsRemaining < 1 ? "finish" : state.status
+      }
+    }
 
     default: throw new Error("unknown action")
   }
@@ -82,7 +97,6 @@ function App() {
       answer,
       points,
       highScore,
-      restart,
       secondsRemaining
     }, dispatch] = useReducer(reducer, initialState);
 
@@ -126,12 +140,19 @@ function App() {
               dispatch={dispatch}
               answer={answer}
             />
-            <NextQuestion
-              dispatch={dispatch}
-              answer={answer}
-              index={index}
-              numQuestions={numQuestions}
-            />
+            <Footer>
+              <Timer
+                secondsRemaining={secondsRemaining}
+                dispatch={dispatch}
+              />
+
+              <NextQuestion
+                dispatch={dispatch}
+                answer={answer}
+                index={index}
+                numQuestions={numQuestions}
+              />
+            </Footer>
           </>
         }
         {status === "finish"
@@ -140,7 +161,6 @@ function App() {
             maxPoints={maxPoints}
             highScore={highScore}
             dispatch={dispatch}
-            restart={restart}
           />}
 
       </Main>
