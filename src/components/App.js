@@ -5,6 +5,7 @@ import Error from "./Error";
 import StartScreen from "./StartScreen";
 import Loader from "./Loader";
 import Question from "./Question";
+// import NextQuestion from "./NextQuestion";
 
 const initialState = {
   questions: [],
@@ -33,16 +34,24 @@ const reducer = function (state, action) {
       return {
         ...state,
         answer: action.payload,
-        points: action.payload === question.correctOption ? question.points + state.points : state.points
+        points: action.payload === question.correctOption ? question.points + state.points : state.points,
       }
     }
+    case "nextQuestion": {
+      return {
+        ...state,
+        index: state.index + 1,
+        answer: null
+      }
+    }
+
 
     default: throw new Error("unknown action")
   }
 }
 
 function App() {
-  const [{ questions, status, index, answer, points }, dispatch] = useReducer(reducer, initialState);
+  const [{ questions, status, index, answer }, dispatch] = useReducer(reducer, initialState);
 
   const numQuestions = questions.length;
 
@@ -65,12 +74,18 @@ function App() {
           numQuestions={numQuestions}
           dispatch={dispatch}
         />}
-        {status === "dataFailed" && <Error />}
-        {status === "active" && <Question
-          question={questions[index]}
-          dispatch={dispatch}
-          answer={answer}
-        />}
+        {status === "error" && <Error />}
+        {status === "active"
+          && <>
+            <Question
+              question={questions[index]}
+              dispatch={dispatch}
+              answer={answer}
+            />
+            {/* <NextQuestion dispatch={dispatch} answer={answer} /> */}
+          </>
+
+        }
       </Main>
     </div>
   );
