@@ -8,6 +8,8 @@ import Question from "./Question";
 import NextQuestion from "./NextQuestion";
 import Progress from "./Progress";
 import FinishScreen from "./FinishScreen";
+import Footer from "./Footer";
+import Timer from "./Timer";
 
 const initialState = {
   questions: [],
@@ -18,6 +20,7 @@ const initialState = {
   answer: null,
   points: 0,
   highScore: 0,
+  secondsRemaining: 10
 };
 
 const reducer = function (state, action) {
@@ -71,7 +74,17 @@ const reducer = function (state, action) {
 }
 
 function App() {
-  const [{ questions, status, index, answer, points, highScore, restart }, dispatch] = useReducer(reducer, initialState);
+  const [
+    {
+      questions,
+      status,
+      index,
+      answer,
+      points,
+      highScore,
+      restart,
+      secondsRemaining
+    }, dispatch] = useReducer(reducer, initialState);
 
   const numQuestions = questions.length;
   const maxPoints = questions.reduce((prev, cur) => {
