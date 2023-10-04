@@ -106,8 +106,7 @@ function QuizProvider({ children }) {
       secondsRemaining,
       dispatch,
       numQuestions,
-      maxPoints,
-
+      maxPoints
     }}>
       {children}
     </QuizContext.Provider>

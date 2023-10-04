@@ -14,7 +14,7 @@ import Timer from "./Timer";
 import { useQuiz } from "../quizContext";
 
 function App() {
-  const { dispatch, status } = useQuiz();
+  const { dispatch, status, questions, index } = useQuiz();
 
   useEffect(function () {
 
@@ -37,7 +37,7 @@ function App() {
         {status === "active"
           && <>
             <Progress />
-            <Question />
+            <Question question={questions[index]} />
             <Footer>
               <Timer />
 
